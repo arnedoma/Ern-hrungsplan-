@@ -1,0 +1,712 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Individueller Ernährungsplan - Pflegeheim "Haus Sonnenschein"</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            line-height: 1.6;
+            color: #2c3e50;
+            background: linear-gradient(135deg, #f8fbff 0%, #e3f2fd 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(52, 152, 219, 0.3);
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+
+        .card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 25px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+            border-left: 5px solid #74b9ff;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+        }
+
+        .card h2 {
+            color: #2980b9;
+            margin-bottom: 20px;
+            font-size: 1.8em;
+            border-bottom: 3px solid #74b9ff;
+            padding-bottom: 10px;
+        }
+
+        .patient-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .info-box {
+            background: linear-gradient(135deg, #e8f5e8 0%, #b8e6b8 100%);
+            padding: 20px;
+            border-radius: 10px;
+            border-left: 5px solid #27ae60;
+        }
+
+        .info-box h3 {
+            color: #27ae60;
+            margin-bottom: 15px;
+        }
+
+        .input-group {
+            margin-bottom: 15px;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #34495e;
+        }
+
+        .input-group input, .input-group select, .input-group textarea {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #bdc3c7;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: border-color 0.3s ease;
+            background: white;
+        }
+
+        .input-group input:focus, .input-group select:focus, .input-group textarea:focus {
+            outline: none;
+            border-color: #3498db;
+            box-shadow: 0 0 10px rgba(52, 152, 219, 0.2);
+        }
+
+        .calculation-box {
+            background: linear-gradient(135deg, #e8f8f5 0%, #a8e6cf 100%);
+            padding: 20px;
+            border-radius: 10px;
+            margin: 15px 0;
+            border-left: 5px solid #1abc9c;
+        }
+
+        .calculation-box h4 {
+            color: #16a085;
+            margin-bottom: 10px;
+        }
+
+        .formula {
+            font-family: 'Courier New', monospace;
+            background: rgba(255,255,255,0.8);
+            padding: 10px;
+            border-radius: 5px;
+            margin: 5px 0;
+            border-left: 3px solid #74b9ff;
+        }
+
+        .result {
+            background: linear-gradient(135deg, #dfe6e9 0%, #b2bec3 100%);
+            padding: 15px;
+            border-radius: 8px;
+            margin: 10px 0;
+            font-weight: bold;
+            color: #2d3436;
+            border-left: 5px solid #636e72;
+        }
+
+        .meal-plan {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 20px;
+        }
+
+        .meal-card {
+            background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+            padding: 20px;
+            border-radius: 10px;
+            border-left: 5px solid #2196f3;
+        }
+
+        .meal-card h4 {
+            color: #1976d2;
+            margin-bottom: 15px;
+            font-size: 1.3em;
+        }
+
+        .normal-texture, .modified-texture {
+            margin-bottom: 15px;
+        }
+
+        .normal-texture h5 {
+            color: #27ae60;
+            margin-bottom: 8px;
+        }
+
+        .modified-texture h5 {
+            color: #7f8c8d;
+            margin-bottom: 8px;
+        }
+
+        .texture-note {
+            background: rgba(255,255,255,0.8);
+            padding: 10px;
+            border-radius: 5px;
+            font-style: italic;
+            margin-top: 10px;
+        }
+
+        .recommendations {
+            background: linear-gradient(135deg, #f0f8ff 0%, #e1f5fe 100%);
+            padding: 20px;
+            border-radius: 10px;
+            border-left: 5px solid #29b6f6;
+        }
+
+        .alert {
+            background: linear-gradient(135deg, #607d8b 0%, #546e7a 100%);
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 30px;
+            padding: 20px;
+            background: #34495e;
+            color: white;
+            border-radius: 10px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ecf0f1;
+        }
+
+        th {
+            background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+            color: white;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f8f9fa;
+        }
+
+        .highlight {
+            background: linear-gradient(135deg, #e8f5e8 0%, #c8e6c9 100%);
+            padding: 15px;
+            border-radius: 8px;
+            margin: 10px 0;
+            font-weight: bold;
+            border-left: 5px solid #4caf50;
+        }
+
+        .btn-calculate {
+            background: linear-gradient(135deg, #1abc9c 0%, #16a085 100%);
+            color: white;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 10px 0;
+            transition: transform 0.3s ease;
+        }
+
+        .btn-calculate:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(26, 188, 156, 0.3);
+        }
+
+        .two-column {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        @media (max-width: 768px) {
+            .two-column {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🏠 Individueller Ernährungsplan Haus Sonnenschein</h1>
+            <p>Ernährungstherapie für Bewohner mit einem erhöhtem Energiebedarf und zur Gewichtszunahme</p>
+        </div>
+
+        <div class="card">
+            <h2>👤 Bewohnerinformationen eingeben</h2>
+            <div class="patient-info">
+                <div class="info-box">
+                    <h3>Persönliche Daten</h3>
+                    <div class="input-group">
+                        <label for="patientName">Name des Bewohners:</label>
+                        <input type="text" id="patientName" placeholder="z.B. Max Mustermann">
+                    </div>
+                    <div class="two-column">
+                        <div class="input-group">
+                            <label for="patientAge">Alter (Jahre):</label>
+                            <input type="number" id="patientAge" placeholder="z.B. 72" min="18" max="120">
+                        </div>
+                        <div class="input-group">
+                            <label for="patientGender">Geschlecht:</label>
+                            <select id="patientGender">
+                                <option value="">Bitte wählen</option>
+                                <option value="männlich">männlich</option>
+                                <option value="weiblich">weiblich</option>
+                                <option value="divers">divers</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="two-column">
+                        <div class="input-group">
+                            <label for="currentWeight">Aktuelles Gewicht (kg):</label>
+                            <input type="number" id="currentWeight" placeholder="z.B. 58" step="0.1" min="30" max="200">
+                        </div>
+                        <div class="input-group">
+                            <label for="height">Körpergröße (cm):</label>
+                            <input type="number" id="height" placeholder="z.B. 175" min="120" max="220">
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <label for="targetWeight">Zielgewicht (kg):</label>
+                        <input type="number" id="targetWeight" placeholder="z.B. 68" step="0.1" min="30" max="200">
+                    </div>
+                    <div class="result" id="bmiResult" style="display: none;">
+                        <p id="bmiValue"></p>
+                        <p id="weightGainNeeded"></p>
+                    </div>
+                </div>
+                <div class="info-box">
+                    <h3>Gesundheitliche Situation</h3>
+                    <div class="input-group">
+                        <label for="diagnosis">Hauptdiagnose:</label>
+                        <input type="text" id="diagnosis" placeholder="z.B. Malnutrition, Dysphagie">
+                    </div>
+                    <div class="input-group">
+                        <label for="swallowing">Schluckbeschwerden:</label>
+                        <select id="swallowing">
+                            <option value="">Bitte wählen</option>
+                            <option value="keine">Keine Schluckbeschwerden</option>
+                            <option value="leicht">Leichte Schluckbeschwerden</option>
+                            <option value="mäßig">Mäßige Schluckbeschwerden</option>
+                            <option value="schwer">Schwere Schluckbeschwerden</option>
+                        </select>
+                    </div>
+                    <div class="input-group">
+                        <label for="activity">Aktivitätslevel:</label>
+                        <select id="activity">
+                            <option value="1.2">Bettlägerig (PAL 1.2)</option>
+                            <option value="1.3">Sitzend, wenig Aktivität (PAL 1.3)</option>
+                            <option value="1.4">Leichte Aktivität (PAL 1.4)</option>
+                            <option value="1.5">Mäßige Aktivität (PAL 1.5)</option>
+                        </select>
+                    </div>
+                    <div class="input-group">
+                        <label for="specialNotes">Besondere Hinweise:</label>
+                        <textarea id="specialNotes" rows="3" placeholder="z.B. Allergien, Unverträglichkeiten, weitere Erkrankungen"></textarea>
+                    </div>
+                </div>
+            </div>
+            <button class="btn-calculate" onclick="calculateValues()">📊 BMI und Energiebedarf berechnen</button>
+        </div>
+
+        <div class="card">
+            <h2>🍽️ Vorlieben & Abneigungen</h2>
+            <div class="patient-info">
+                <div class="info-box">
+                    <h3>✅ Vorlieben</h3>
+                    <div class="input-group">
+                        <label for="preferences">Bevorzugte Speisen und Getränke:</label>
+                        <textarea id="preferences" rows="5" placeholder="z.B. Warme Suppen, Milchprodukte, weiche Speisen, bestimmte Geschmacksrichtungen"></textarea>
+                    </div>
+                </div>
+                <div class="info-box">
+                    <h3>❌ Abneigungen/Intoleranzen</h3>
+                    <div class="input-group">
+                        <label for="dislikes">Abgelehnte Speisen, Allergien, Intoleranzen:</label>
+                        <textarea id="dislikes" rows="5" placeholder="z.B. Rohkost, Nüsse, Laktoseintoleranz, scharfe Gewürze"></textarea>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>📊 Energiebedarfsberechnung</h2>
+
+            <div class="calculation-box">
+                <h4>1. Grundumsatz (Mifflin-St Jeor Formel)</h4>
+                <div class="formula">
+                    <strong>Für Männer:</strong> BMR = (10 × Gewicht in kg) + (6.25 × Größe in cm) - (5 × Alter) + 5
+                </div>
+                <div class="formula">
+                    <strong>Für Frauen:</strong> BMR = (10 × Gewicht in kg) + (6.25 × Größe in cm) - (5 × Alter) - 161
+                </div>
+                <div class="result" id="bmrResult" style="display: none;">
+                    <p id="bmrValue"></p>
+                </div>
+            </div>
+
+            <div class="calculation-box">
+                <h4>2. Leistungsumsatz (PAL-Faktor)</h4>
+                <p><strong>Aktivitätslevel wird automatisch aus der Auswahl übernommen</strong></p>
+                <div class="formula">
+                    Gesamtumsatz = BMR × PAL-Faktor
+                </div>
+                <div class="result" id="totalEnergyResult" style="display: none;">
+                    <p id="totalEnergyValue"></p>
+                </div>
+            </div>
+
+            <div class="calculation-box">
+                <h4>3. Zusätzlicher Energiebedarf für Gewichtszunahme</h4>
+                <p><strong>Empfohlene Gewichtszunahme:</strong> 0,150 - 0,300kg pro Woche</p>
+                <div class="input-group">
+                    <label for="weeklyGoal">Gewünschte wöchentliche Zunahme (kg):</label>
+                    <select id="weeklyGoal">
+                        <option value="0.25">0.25kg/Woche (+ 250 kcal/Tag)</option>
+                        <option value="0.75">0.75 kg/Woche (+750 kcal/Tag)</option>
+                        <option value="1.0">1.0 kg/Woche (+1000 kcal/Tag)</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="highlight" id="finalResult" style="display: none;">
+                <h3>🎯 Gesamtenergiebedarf für Gewichtszunahme</h3>
+                <p id="maintenanceCalories"></p>
+                <p id="buildupCalories"></p>
+                <p id="totalCalories"></p>
+                <p id="proteinNeeds"></p>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>⏰ Tagesablauf der Mahlzeitenversorgung</h2>
+            <div class="meal-plan">
+                <div class="meal-card">
+                    <h4>🌅 Frühstück (07:00 Uhr) - ca. 550 kcal</h4>
+                    <div class="normal-texture">
+                        <h5>Normale Konsistenz:</h5>
+                        <ul>
+                            <li>Haferbrei mit Vollmilch (200g)</li>
+                            <li>Banane in Scheiben</li>
+                            <li>1 EL Honig</li>
+                            <li>Vollmilch (200ml)</li>
+                        </ul>
+                    </div>
+                    <div class="modified-texture">
+                        <h5>Bei Schluckbeschwerden:</h5>
+                        <ul>
+                            <li>Haferbrei, fein püriert</li>
+                            <li>Banane püriert</li>
+                            <li>Honig eingerührt</li>
+                            <li>Andickmittel bei Bedarf</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="meal-card">
+                    <h4>🥨 Zwischenmahlzeit (10:00 Uhr) - ca. 320 kcal</h4>
+                    <div class="normal-texture">
+                        <h5>Normale Konsistenz:</h5>
+                        <ul>
+                            <li>Vollmilchjoghurt (150g)</li>
+                            <li>Kompott (100g)</li>
+                            <li>Keks, eingeweicht</li>
+                        </ul>
+                    </div>
+                    <div class="modified-texture">
+                        <h5>Bei Schluckbeschwerden:</h5>
+                        <ul>
+                            <li>Joghurt glatt gerührt</li>
+                            <li>Kompott passiert</li>
+                            <li>Keks aufgelöst/püriert</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="meal-card">
+                    <h4>🍽️ Mittagessen (12:30 Uhr) - ca. 680 kcal</h4>
+                    <div class="normal-texture">
+                        <h5>Normale Konsistenz:</h5>
+                        <ul>
+                            <li>Cremige Gemüsesuppe (200ml)</li>
+                            <li>Gedämpfter Fisch (100g)</li>
+                            <li>Kartoffelpüree (200g)</li>
+                            <li>Buttergemüse, weich (100g)</li>
+                        </ul>
+                    </div>
+                    <div class="modified-texture">
+                        <h5>Bei Schluckbeschwerden:</h5>
+                        <ul>
+                            <li>Suppe passiert, angedickt</li>
+                            <li>Fisch fein zerdrückt/püriert</li>
+                            <li>Kartoffelpüree glatt</li>
+                            <li>Gemüse fein püriert</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="meal-card">
+                    <h4>☕ Nachmittagssnack (15:30 Uhr) - ca. 380 kcal</h4>
+                    <div class="normal-texture">
+                        <h5>Normale Konsistenz:</h5>
+                        <ul>
+                            <li>Milchkaffee (200ml)</li>
+                            <li>Grießpudding (150g)</li>
+                            <li>Fruchtsauce (50g)</li>
+                        </ul>
+                    </div>
+                    <div class="modified-texture">
+                        <h5>Bei Schluckbeschwerden:</h5>
+                        <ul>
+                            <li>Kaffee mit Andickmittel</li>
+                            <li>Pudding glatt gerührt</li>
+                            <li>Fruchtsauce passiert</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="meal-card">
+                    <h4>🌙 Abendessen (18:00 Uhr) - ca. 480 kcal</h4>
+                    <div class="normal-texture">
+                        <h5>Normale Konsistenz:</h5>
+                        <ul>
+                            <li>Kräftige Fleischbrühe (200ml)</li>
+                            <li>Weißbrot, entrindet (2 Scheiben)</li>
+                            <li>Streichkäse (30g)</li>
+                            <li>Warme Milch (200ml)</li>
+                        </ul>
+                    </div>
+                    <div class="modified-texture">
+                        <h5>Bei Schluckbeschwerden:</h5>
+                        <ul>
+                            <li>Brühe angedickt</li>
+                            <li>Brot in Milch eingeweicht</li>
+                            <li>Käse geschmolzen/püriert</li>
+                            <li>Milch ggf. angedickt</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="meal-card">
+                    <h4>🌃 Spätmahlzeit (20:30 Uhr) - ca. 290 kcal</h4>
+                    <div class="normal-texture">
+                        <h5>Normale Konsistenz:</h5>
+                        <ul>
+                            <li>Trinknahrung (200ml)</li>
+                            <li>Oder: Milchshake mit Banane</li>
+                        </ul>
+                    </div>
+                    <div class="modified-texture">
+                        <h5>Bei Schluckbeschwerden:</h5>
+                        <ul>
+                            <li>Trinknahrung angedickt</li>
+                            <li>Löffelweise verabreichen</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>💊 Zusätzliche Maßnahmen & Empfehlungen</h2>
+            <div class="recommendations">
+                <h4>🔬 Supplementierung</h4>
+                <ul>
+                    <li><strong>Hochkalorische und vollbilanzierte Trinknahrung im Haus selber hergestellt:</strong> 1-2x täglich zwischen den Mahlzeiten</li>
+                </ul>
+
+                <h4>🍯 Konsistenzanpassungen bei Schluckbeschwerden</h4>
+                <ul>
+                    <li><strong>Flüssigkeiten:</strong> IDDSI Level 1-3 je nach Bedarf</li>
+                    <li><strong>Andickmittel:</strong> ModuleN oder ThickenUp bei Bedarf</li>
+                    <li><strong>Texturen:</strong> Pürierte bis weiche Kost (IDDSI 4-6)</li>
+                    <li><strong>Temperatur:</strong> Warme Speisen bevorzugt, keine extremen Temperaturen</li>
+                </ul>
+
+                <h4>⚡ Energieanreicherung</h4>
+                <ul>
+                    <li>Aufbaupulver in Getränke einrühren</li>
+                    <li>Leinöl (5-10ml) zu Speisen</li>
+                    <li>Sahne und Butter großzügig verwenden</li>
+                    <li>Eiweißpulver in Milchprodukte und Herstellung individueller Eiweißreicher Kost</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="alert">
+            <h3>⚠️ Wichtige Hinweise</h3>
+            <p><strong>Überwachung:</strong> Wöchentliche Gewichtskontrolle, Flüssigkeitsbilanz beachten</p>
+            <p><strong>Schlucktest:</strong> Bei anhaltenden Problemen logopädische Evaluation</p>
+            <p><strong>Anpassung:</strong> Plan alle 2 Wochen entsprechend Fortschritt überprüfen</p>
+        </div>
+
+        <div class="card">
+            <h2>📈 Monitoring & Erfolgskontrolle</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Parameter</th>
+                        <th>Sollwert</th>
+                        <th>Kontrollintervall</th>
+                        <th>Maßnahmen bei Abweichung</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Gewichtszunahme</td>
+                        <td>0.150 - 0,350 kg/Woche</td>
+                        <td>2x wöchentlich</td>
+                        <td>Kalorienerhöhung/Trinknahrung</td>
+                    </tr>
+                    <tr>
+                        <td>Flüssigkeitsaufnahme</td>
+                        <td>1000-2000ml ggf nach ärztlicher Anordnung/Tag</td>
+                        <td>Täglich</td>
+                        <td>Andicken, Geschmack variieren</td>
+                    </tr>
+                    <tr>
+                        <td>Proteinerhöhung</td>
+                        <td>Individuell (ca. 1.2-1.5 g/kg KG)</td>
+                        <td>Wöchentlich</td>
+                        <td>Eiweißreiche Kost/Supplemente</td>
+                    </tr>
+                    <tr>
+                        <td>Schluckfunktion</td>
+                        <td>Keine Aspiration</td>
+                        <td>Bei Bedarf</td>
+                        <td>Logopädie, Konsistenzanpassung</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="footer">
+            <p><strong>Erstellt von:</strong> Arne Domachofski | <strong>Fachliche Qualifikation:</strong> Koch und Diättisch geschulter Koch</p>
+            <p><strong>Datum:</strong> 13. Juni 2025 | <strong>Nächste Überprüfung:</strong> Individuell anpassbar</p>
+            <p><em>Dieser Plan wurde nach aktuellen ernährungsmedizinischen Leitlinien (DGEM, ESPEN) erstellt</em></p>
+        </div>
+    </div>
+
+    <script>
+        function calculateValues() {
+            const weight = parseFloat(document.getElementById('currentWeight').value);
+            const height = parseFloat(document.getElementById('height').value);
+            const age = parseInt(document.getElementById('patientAge').value);
+            const gender = document.getElementById('patientGender').value;
+            const targetWeight = parseFloat(document.getElementById('targetWeight').value);
+            const activityLevel = parseFloat(document.getElementById('activity').value);
+            const weeklyGoal = parseFloat(document.getElementById('weeklyGoal').value);
+
+            // Input validation
+            if (isNaN(weight) || isNaN(height) || isNaN(age) || !gender || isNaN(targetWeight)) {
+                alert('Bitte füllen Sie alle erforderlichen Felder (Gewicht, Größe, Alter, Geschlecht, Zielgewicht) aus, bevor Sie berechnen.');
+                return;
+            }
+
+            // BMI berechnen
+            const bmi = weight / ((height / 100) ** 2);
+            const weightGain = targetWeight - weight;
+
+            // BMI Ergebnis anzeigen
+            const bmiResult = document.getElementById('bmiResult');
+            const bmiValue = document.getElementById('bmiValue');
+            const weightGainNeeded = document.getElementById('weightGainNeeded');
+
+            bmiValue.textContent = `Aktueller BMI: ${bmi.toFixed(1)} kg/m²`;
+            weightGainNeeded.textContent = `Benötigte Gewichtszunahme: ${weightGain.toFixed(1)} kg`;
+            bmiResult.style.display = 'block';
+
+            // Grundumsatz berechnen (Mifflin-St Jeor)
+            let bmr;
+            if (gender === 'männlich') {
+                bmr = (10 * weight) + (6.25 * height) - (5 * age) + 5;
+            } else if (gender === 'weiblich') {
+                bmr = (10 * weight) + (6.25 * height) - (5 * age) - 161;
+            } else {
+                // For 'divers' or if not specified, using a male formula as a general default
+                bmr = (10 * weight) + (6.25 * height) - (5 * age) + 5;
+            }
+
+            // BMR Ergebnis anzeigen
+            const bmrElem = document.getElementById('bmrResult');
+            document.getElementById('bmrValue').textContent = `Grundumsatz (BMR): ${bmr.toFixed(0)} kcal/Tag`;
+            bmrElem.style.display = 'block';
+
+            // Gesamtenergiebedarf (Leistungsumsatz)
+            const totalEnergy = bmr * activityLevel;
+
+            // Gesamtenergiebedarf Ergebnis anzeigen
+            const totalEnergyElem = document.getElementById('totalEnergyResult');
+            document.getElementById('totalEnergyValue').textContent = `Gesamtenergiebedarf (ohne Zunahme): ${totalEnergy.toFixed(0)} kcal/Tag`;
+            totalEnergyElem.style.display = 'block';
+
+            // Zusätzlicher Energiebedarf für Gewichtszunahme
+            let additionalCalories = 0;
+            if (weeklyGoal === 0.25) {
+                additionalCalories = 250;
+            } else if (weeklyGoal === 0.75) {
+                additionalCalories = 750;
+            } else if (weeklyGoal === 1.0) {
+                additionalCalories = 1000;
+            }
+
+            const finalTotalCalories = totalEnergy + additionalCalories;
+
+            // Proteinbedarf (angenommen 1.2-1.5g/kg KG bei erhöhtem Bedarf, hier pauschal 1.2g/kg)
+            const proteinNeeds = weight * 1.2; // Example: 1.2g per kg of current weight, can be adjusted.
+
+            // Endgültige Ergebnisse anzeigen
+            const finalResult = document.getElementById('finalResult');
+            document.getElementById('maintenanceCalories').textContent = `Erhaltungsbedarf: ${totalEnergy.toFixed(0)} kcal/Tag`;
+            document.getElementById('buildupCalories').textContent = `Zusatzbedarf für Gewichtszunahme: +${additionalCalories.toFixed(0)} kcal/Tag`;
+            document.getElementById('totalCalories').textContent = `Gesamtenergiebedarf für Gewichtszunahme: ${finalTotalCalories.toFixed(0)} kcal/Tag`;
+            document.getElementById('proteinNeeds').textContent = `Geschätzter Proteinbedarf: ${proteinNeeds.toFixed(1)} g/Tag`;
+            finalResult.style.display = 'block';
+        }
+    </script>
+</body>
+</html>
